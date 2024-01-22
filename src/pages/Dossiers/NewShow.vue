@@ -41,48 +41,48 @@ import { useAuthStore } from '../../../core/Data/stores/auth';
    
     const tabs = [
         {
-            icon:"https://cdn-cd.milleniumds.ma/argent.png",
+            icon:"https://test.clickdoc.ma/argent.png",
             label:"Situation",
             name:"sit-financiere"
         },
         {
-            icon:"https://cdn-cd.milleniumds.ma/imagerie.png",
+            icon:"https://test.clickdoc.ma/imagerie.png",
             label:"Imagerie",
             name:"imagerie"
         },
         {
-            icon:"https://cdn-cd.milleniumds.ma/sang.png",
+            icon:"https://test.clickdoc.ma/sang.png",
             label:"Analyses",
             name:"analyses"
         },
         {
-            icon:"https://cdn-cd.milleniumds.ma/consultation.png",
+            icon:"https://test.clickdoc.ma/consultation.png",
             label:"Consultations",
             name:"consultations"
         },
 
         {
-            icon:"https://cdn-cd.milleniumds.ma/consultation.png",
+            icon:"https://test.clickdoc.ma/consultation.png",
             label:"Traitements",
             name:"traitement"
         },
         {
-            icon:"https://cdn-cd.milleniumds.ma/ordonnance.png",
+            icon:"https://test.clickdoc.ma/ordonnance.png",
             label:"Ordonnances",
             name:"ant-ordonnances"
         },
         {
-            icon:"https://cdn-cd.milleniumds.ma/consultation.png",
+            icon:"https://test.clickdoc.ma/consultation.png",
             label:"Rendez vous",
             name:"rendez-vous"
         },
         {
-            icon:"https://cdn-cd.milleniumds.ma/history.png",
+            icon:"https://test.clickdoc.ma/history.png",
             label:"Antécédents",
             name:"ants"
         },
         {
-            icon:"https://cdn-cd.milleniumds.ma/history.png",
+            icon:"https://test.clickdoc.ma/history.png",
             label:"Tableau personnalisé",
             name:"tableau-personnalise"
         },

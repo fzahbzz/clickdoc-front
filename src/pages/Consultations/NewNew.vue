@@ -163,7 +163,7 @@ onBeforeMount(async ()=>{
                     </div>
                     <div class="rounded-2xl p-4 bg-white mt-3 shadow-xl" >
                         <div class="flex text-lg text-clickdoc">
-                            <img src="https://cdn-cd.milleniumds.ma/mesure.png" class="h-6 w-6"> &nbsp;&nbsp;
+                            <img src="https://test.clickdoc.ma/mesure.png" class="h-6 w-6"> &nbsp;&nbsp;
                             <span class="font-bold">
                                 Données vitales
                             </span>
@@ -221,7 +221,7 @@ onBeforeMount(async ()=>{
                                 </ul>
                             </el-col>
                             <el-col :lg="9">
-                                <img src="https://cdn-cd.milleniumds.ma/silhouette.png" class="w-full">
+                                <img src="https://test.clickdoc.ma/silhouette.png" class="w-full">
                             </el-col>
                         </el-row>
                     </div>

@@ -19,12 +19,12 @@
             <ul class="menu menu-sm rounded-box">
                 <li  @click="router.push('/')">
                     <a>
-                        <el-icon  > <img src="https://cdn-cd.milleniumds.ma/tableau-de-bord.png" > </el-icon> Tableau de bord
+                        <el-icon  > <img src="https://test.clickdoc.ma/tableau-de-bord.png" > </el-icon> Tableau de bord
                     </a>
                 </li>
                 <li  @click="router.push('/agenda')">
                     <a>
-                        <el-icon  > <img src="https://cdn-cd.milleniumds.ma/agenda.png" > </el-icon> Agenda
+                        <el-icon  > <img src="https://test.clickdoc.ma/agenda.png" > </el-icon> Agenda
                     </a>
                 </li>
             </ul>
@@ -33,12 +33,12 @@
                     <li class="menu-title text-uppercase"> Click Admin </li>
                     <li @click="router.push('/licences')">
                         <a>
-                            <el-icon> <img src="https://cdn-cd.milleniumds.ma/business-people.png" ></el-icon> Licences
+                            <el-icon> <img src="https://test.clickdoc.ma/business-people.png" ></el-icon> Licences
                         </a>
                     </li>
                     <li @click="router.push('/laboratoires-medicament')">
                         <a>
-                            <el-icon> <img src="https://cdn-cd.milleniumds.ma/medicaments.png" ></el-icon> Meds Labo
+                            <el-icon> <img src="https://test.clickdoc.ma/medicaments.png" ></el-icon> Meds Labo
                         </a>
                     </li>
                 </span>
@@ -46,54 +46,54 @@
                     <li class="menu-title text-uppercase"> Click Cabinet </li>
                     <li  @click="router.push('/salle-attente')" v-if="store.user.role != 'assistant' || store.privileges[0].enable==1">
                         <a>
-                            <el-icon  > <img src="https://cdn-cd.milleniumds.ma/salle-dattente.png" > </el-icon> Salle d'attente
+                            <el-icon  > <img src="https://test.clickdoc.ma/salle-dattente.png" > </el-icon> Salle d'attente
                         </a>
                     </li>
                     <li @click="router.push('/dossiers')" v-if="store.user.role != 'assistant' || (store.privileges[1].enable==1 && store.privileges[1].view==1)" >
                         <a>
-                            <el-icon> <img src="https://cdn-cd.milleniumds.ma/dossiers.png" ></el-icon> Dossiers
+                            <el-icon> <img src="https://test.clickdoc.ma/dossiers.png" ></el-icon> Dossiers
                         </a>
                     </li>
                     <li @click="router.push('/consultations')" v-if="store.user.role != 'assistant' || store.privileges[2].enable==1">
                         <a>
-                            <el-icon> <img src="https://cdn-cd.milleniumds.ma/consultant.png" ></el-icon> Consultations
+                            <el-icon> <img src="https://test.clickdoc.ma/consultant.png" ></el-icon> Consultations
                         </a>
                     </li>
                     <li @click="router.push('/ordonnances')" v-if="store.user.role != 'assistant' || store.privileges[3].enable==1 " >
                         <a>
-                            <el-icon> <img src="https://cdn-cd.milleniumds.ma/ordonnance.png" ></el-icon> Ordonnances
+                            <el-icon> <img src="https://test.clickdoc.ma/ordonnance.png" ></el-icon> Ordonnances
                         </a>
                     </li>
                     <li @click="router.push('/analyses')" v-if="store.user.role != 'assistant' || store.privileges[4].enable==1" >
                         <a>
-                            <el-icon> <img src="https://cdn-cd.milleniumds.ma/analyse-de-sang.png" ></el-icon> Analyses
+                            <el-icon> <img src="https://test.clickdoc.ma/analyse-de-sang.png" ></el-icon> Analyses
                         </a>
                     </li>
                     <li class="menu-title text-uppercase "> Click Gestion </li>
                     <li  @click="router.push('/actes-medicaux')">
                         <a>
-                            <el-icon  > <img src="https://cdn-cd.milleniumds.ma/soins-medicaux.png" > </el-icon> Actes médicaux
+                            <el-icon  > <img src="https://test.clickdoc.ma/soins-medicaux.png" > </el-icon> Actes médicaux
                         </a>
                     </li>
                     <li @click="router.push('/personnel')" v-if="store.user.role != 'assistant' || store.privileges[5].enable==1">
                         <a>
-                            <el-icon> <img src="https://cdn-cd.milleniumds.ma/business-people.png"  ></el-icon> Personnel
+                            <el-icon> <img src="https://test.clickdoc.ma/business-people.png"  ></el-icon> Personnel
                         </a>
                     </li>
                     <li @click="router.push('/medicaments')">
                         <a>
-                            <el-icon> <img src="https://cdn-cd.milleniumds.ma/medicaments.png" ></el-icon> Médicaments
+                            <el-icon> <img src="https://test.clickdoc.ma/medicaments.png" ></el-icon> Médicaments
                         </a>
                     </li>
                     <li @click="router.push('/analyses')">
                         <a>
-                            <el-icon> <img src="https://cdn-cd.milleniumds.ma/analyses.png" ></el-icon> Liste Analyses
+                            <el-icon> <img src="https://test.clickdoc.ma/analyses.png" ></el-icon> Liste Analyses
                         </a>
                     </li>
                     <li class="menu-title text-uppercase "> Click COMPTA </li>
                     <li  @click="router.push('/caisse')">
                         <a>
-                            <el-icon  > <img src="https://cdn-cd.milleniumds.ma/caisse-enregistreuse.png" > </el-icon> Caisse
+                            <el-icon  > <img src="https://test.clickdoc.ma/caisse-enregistreuse.png" > </el-icon> Caisse
                         </a>
                     </li>
                 </span>

@@ -107,7 +107,7 @@ import { Payment } from '../../core/Clients/Payment';
             <div class="stats mt-2 shadow w-full">
                 <div class="stat">
                     <div class="stat-figure text-clickdoc">
-                        <img src="https://cdn-cd.milleniumds.ma/argent.png" class="h-8 w-8">
+                        <img src="https://test.clickdoc.ma/argent.png" class="h-8 w-8">
                     </div>
                     <div class="stat-title">Chiffre d'affaire mensuel</div>
                     <div class="stat-value"> {{ report.mca }} </div>
@@ -115,7 +115,7 @@ import { Payment } from '../../core/Clients/Payment';
                 
                 <div class="stat">
                     <div class="stat-figure text-clickdoc">
-                        <img src="https://cdn-cd.milleniumds.ma/argent.png" class="h-8 w-8">
+                        <img src="https://test.clickdoc.ma/argent.png" class="h-8 w-8">
                     </div>
                     <div class="stat-title">Revenu d'aujourd'hui</div>
                     <div class="stat-value">{{  report.dca }}</div>
@@ -123,7 +123,7 @@ import { Payment } from '../../core/Clients/Payment';
                 
                 <div class="stat">
                     <div class="stat-figure text-clickdoc">
-                        <img src="https://cdn-cd.milleniumds.ma/salle-dattente.png" class="h-8 w-8">
+                        <img src="https://test.clickdoc.ma/salle-dattente.png" class="h-8 w-8">
                     </div>
                     <div class="stat-title">Patients en attente</div>
                     <div class="stat-value">{{ report.wL }}</div>
@@ -131,7 +131,7 @@ import { Payment } from '../../core/Clients/Payment';
 
                 <div class="stat">
                     <div class="stat-figure text-clickdoc">
-                        <img src="https://cdn-cd.milleniumds.ma/dossiers.png" class="h-8 w-8">
+                        <img src="https://test.clickdoc.ma/dossiers.png" class="h-8 w-8">
                     </div>
                     <div class="stat-title">Patients traités </div>
                     <div class="stat-value">{{ report.patients }}</div>
