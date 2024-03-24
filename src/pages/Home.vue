@@ -4,8 +4,10 @@
     import { RendezVous } from '../../core/Clients/RendezVous';
     import { Facture } from '../../core/Clients/Facture';
     import { useRdvStore } from '../../core/Data/stores/rendez-vous';
-    import { Ref, onBeforeMount, ref , watch } from 'vue';
-import { Payment } from '../../core/Clients/Payment';
+    import { Ref, onBeforeMount, ref , watch, reactive } from 'vue';
+    import { Payment } from '../../core/Clients/Payment';
+    import { useRouter } from 'vue-router';
+	import axios from "axios"
 
     const store = useUtilStore()
     const rdvStore = useRdvStore()
@@ -16,13 +18,25 @@ import { Payment } from '../../core/Clients/Payment';
     const patients : Ref<any> = ref([]);
     const factures : Ref<any> = ref([]);
     const patient : Ref<number> = ref(0);
+    const router = useRouter()
     const fields =[
         {prop:'surname',label:'Prénom'},
         {prop:'name',label:'Nom'},
-        {prop:'type',label:'Type '}
+        {prop:'type',label:'Type '},
+        {prop:'heure',label:'Heure '}
     ]
+    const showEditModal = ref(false);
+    const rdv = reactive({
+        patient_id:"",
+        id:"",
+        heure:"",
+        statut:""
+    })
+	const long_banner = ref<any>(null)
+	const square_banner = ref<any>(null)
+    const heures = ["06:00","06:30","07:00","07:30","08:00","08:30","09:00","09:30","10:00","10:30","11:00","11:30","12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00"]
     const RdvS : Ref<Array<any>> = ref([])
-    const report : Ref<any> = ref({
+	const report : Ref<any> = ref({
         mca:0,
         dca:0
     })
@@ -36,37 +50,46 @@ import { Payment } from '../../core/Clients/Payment';
     })
 
     async function getData () {
-        RdvS.value = await rdvClient.isToday();
-        await getReports()
-        
+        RdvS.value = await rdvClient.isToday();        
     }
-    async function getReports(){
-    const data = await paymentClient.getReport("")
-    report.value.mca = 0
-    data?.mca.forEach((element:any) => {
-        report.value.mca += element.amount
-    });
-    report.value.dca = 0
-    data?.dca.forEach((element:any) => {
-        report.value.dca += element.amount
-    });
-    report.value.wL = data.wL
-    report.value.patients = data.patients
+	
+	async function getReports(){
+		const data = await paymentClient.getReport("")
+		report.value.mca = 0
+		data?.mca.forEach((element:any) => {
+			report.value.mca += element.amount
+		});
+		report.value.dca = 0
+		data?.dca.forEach((element:any) => {
+			report.value.dca += element.amount
+		});
+		report.value.wL = data.wL
+		report.value.patients = data.patients
 
-}
+	}
 
     async function loadSitFinanciere(){
-        await getReports()
         factures.value = await factureClient.getThings(patient.value);
     }
 
+	async function getBanners ()
+	{
+		try {
+		const responseLong = await axios.get("https://directus.clickdoc.ma/publicity/items/long_banners?fields=*.*,image.*&sort=-id")
+		const responseSquare = await axios.get("https://directus.clickdoc.ma/publicity/items/long_banners?fields=*.*,image.*&sort=-id")
+		long_banner.value = responseLong.data.data[0]
+		square_banner.value = responseSquare.data.data[0]
+		}catch(error){
+			console.log("no banner")
+		}
+	}
     async function saveFacture(){
-        paiement.value.facture_id = factures.value[index_facture.value].id
         await paymentClient.add(paiement.value)
         paiement.value={
             patient_id:0,
             amount:0,
-            type:"Espèce"
+            type:"Espèce",
+			facture_id:facture_to_send.value
         }
         await factureClient.update({id:facture_to_send.value,statut:factures.value[index_facture.value].statut})
         addPayment.value=false
@@ -74,6 +97,8 @@ import { Payment } from '../../core/Clients/Payment';
     }
     onBeforeMount(async ()=>{
         await getData()
+		await getBanners()
+		await getReports()
         patients.value = await factureClient.getAll();
     })
 	
@@ -81,9 +106,11 @@ import { Payment } from '../../core/Clients/Payment';
         index_facture.value = index
         paiement.value.patient_id=factures.value[index].patient_id
         facture_to_send.value = factures.value[index].id
+		paiement.value.facture_id = factures.value[index].id
 		if(factures.value[index].statut=="payé partiellement")
 		{
 			addPayment.value=true
+
 		}
         else if(factures.value[index].statut=="payé")
         {
@@ -91,6 +118,40 @@ import { Payment } from '../../core/Clients/Payment';
             paiement.value.amount=factures.value[index].amount
         }
 	}
+
+    const actions = [
+        {
+            label: 'Edit',
+            icon: 'edit',
+            action: openEditModal
+        },
+        {
+            icon: "View",
+            text:"voir",
+            action: (n:any)=>{show(n.uid)}
+        }
+    ]
+
+    async function saveEdit() {
+        await rdvClient.update(rdv);
+        rdvStore.setTrigger(true);
+    }
+
+    function show(n:any)
+    {
+        router.push("/dossiers/"+n)
+    }
+
+    function openEditModal(rowData) {
+        rdv.heure = rowData.heure
+        rdv.statut = rowData.statut
+        rdv.id = rowData.rdv_id
+        rdv.date = rowData.date
+        rdv.patient_id = rowData.patient_id
+        rdv.page = 1
+        rdv.toGet = 25
+        showEditModal.value = true;
+    }
 
     watch(rdvStore, async (newState) => {
         if(newState.trigger == true){
@@ -137,6 +198,9 @@ import { Payment } from '../../core/Clients/Payment';
                     <div class="stat-value">{{ report.patients }}</div>
                 </div>
             </div>
+			<div class="h-48 my-2 rounded-xl" v-if="long_banner" :style="'background-image:url('+long_banner.image.data.full_url+');background-size:cover;background-position:center'">
+				<a class="w-full h-32" :href="long_banner.link"  target="_blank" ></a>
+			</div>  
             <el-row :gutter="10" class="mt-4">
                 <el-col :span="8">
                     <div class="h-thing rounded-xl bg-white shadow p-4 ">
@@ -150,12 +214,11 @@ import { Payment } from '../../core/Clients/Payment';
                                 :hasAvatar="true" 
                                 :client="client" 
                                 :fields="fields" 
-                                :actions="[]" 
+                                :actions="actions"
                                 :no-header="true"
                                 ref="table"
                                 :triggerStore="useRdvStore"
                                 :is-small="true"
-                                toRoute="/dossiers"
                             />
                         </div>
                     </div>
@@ -219,13 +282,43 @@ import { Payment } from '../../core/Clients/Payment';
                         </div>
                     </div>
                 </el-col>
-                <el-col :span="12" class="">
+				<el-col :span="12" class="">
                     <div class="h-there-2 rounded-xl bg-white shadow p-6 mt-2 ">
                         <div class="font-bold text-xl"> Tâches </div>
                         <tasks />
                     </div>
                 </el-col>
             </el-row>
+            
+            <el-dialog v-model="showEditModal" title="Edit Patient">
+                <el-form>
+                    <el-row :gutter="12">
+                        <el-col :span="12">
+                            <el-form-item label="Heure">
+                                <el-select class="w-full" v-model="rdv.heure">
+                                    <el-option v-for="h in heures" :key="h" :value="h" :label="h" v-if="async()=>await isEmpty(h)" />
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        
+                        <el-col :span="12">
+                            <el-form-item label="Statut">
+                                <el-select class="w-full" v-model="rdv.statut"> 
+                                    <el-option value="salle attente" label="Salle d'attente" />
+                                    <el-option value="canceled" label="Rendez vous annulé" />
+                                    <el-option value="honored" label="Rendez vous honoré" />
+                                    <el-option value="planified" label="Rendez vous planifié" />
+                                    <el-option value="postponed" label="Rendez vous reporté" />
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    
+                    <el-form-item>
+                    <button class="btn btn-sm btn-block background-clickdoc" type="button" @click="async () => {await saveEdit()}">Save</button>
+                    </el-form-item>
+                </el-form>
+            </el-dialog>
         </div>
     </main-layout>
 </template>

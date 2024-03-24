@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-    import { Ref , onBeforeMount, ref , watch } from 'vue';
+    import { Ref , onBeforeMount , onMounted, ref , watch } from 'vue';
     import { useUtilStore } from '../../../core/Data/stores/utilitaire';
     import {RendezVous} from '../../../core/Clients/RendezVous.ts'
     import { useRdvStore } from '../../../core/Data/stores/rendez-vous';
@@ -9,6 +9,7 @@
     const client = new RendezVous();
     const date : Ref<Date> =ref(new Date())
     const eventss :Ref<any> = ref([])
+	const loaded : Ref<boolean> = ref(false)
     const loading :Ref<boolean> = ref(true);
     const util = useUtilStore();
     const store = useRdvStore();
@@ -18,31 +19,27 @@
     const innerList : Ref<Array<any>> = ref([])
 
     const mainList : Ref<Array<any>> = ref([])
-    function colors(type:string) {
-        return type=="Consultation"?"green":type=="Controle"?"red":type=="Traitement"?"yellow":"blue";
-    }
+	
 
-    async function changeToEvents() {
-        loading.value=true
-        eventss.value=[]
-        mainList.value = await client.getByMonth(moment(date.value).format("MM"))
-        for(var i = 0 ; i<mainList.value.length ; i++)
-        {
-		  eventss.value.push({
-		  	description: mainList.value[i].type + "( "+ (mainList.value[i].statut=='postponed' ? "reporté": mainList.value[i].statut=="salle attente" ? "salle d'attente":mainList.value[i].statut=='planified' ? "Planifié" : mainList.value[i].statut=='canceled'? "Annulé":"Honoré") +" )",
-            title: mainList.value[i].name + " " + mainList.value[i].surname,
-            time:{
-                start : moment(mainList.value[i].date,"DD/MM/YYYY").format("YYYY-MM-DD") + " " + mainList.value[i].heure,
-                end : moment(mainList.value[i].date,"DD/MM/YYYY").format("YYYY-MM-DD") + " " + moment(mainList.value[i].heure,"HH:mm").add(30,'minutes').format("HH:mm")
-            },
-            isEditable:true,
-            id :mainList.value[i].id,
-            color:colors(mainList.value[i].type)
-		  })
-        }
-        setTimeout(()=>{
-            loading.value=false
-        },3000) 
+    const changeToEvents = async()=>{
+		loaded.value=false
+		mainList.value = await client.getByMonth(moment(date.value).format("MM"))
+        let generated=[]
+		for (const [key, value] of Object.entries(mainList.value)) {
+			generated.push({
+				description: value.type + "( "+ (value.statut=='postponed' ? "reporté": value.statut=="salle attente" ? "salle d'attente":value.statut=='planified' ? "Planifié" : value.statut=='canceled'? "Annulé":"Honoré") +" )",
+				title: value.name + " " + value.surname,
+				time:{
+					start : moment(value.date,"DD/MM/YYYY").format("YYYY-MM-DD") + " " + value.heure,
+					end : moment(value.date,"DD/MM/YYYY").format("YYYY-MM-DD") + " " + moment(value.heure,"HH:mm").add(30,'minutes').format("HH:mm")
+				},
+				isEditable:true,
+				id :value.id,
+				colorScheme:value.color
+			})
+		}
+		eventss.value=generated
+		loaded.value=true
 	}
 
     async function saveRDV()
@@ -70,8 +67,10 @@
 
     watch(store, async (newState) => {
         if(newState.trigger == true){
-            console.log("OK")
+			
             await changeToEvents()
+			loaded.value=true
+			console.log("Loaded changed")
             store.setTrigger(false)
         }
     }, { deep: true})
@@ -81,6 +80,7 @@
             util.setRDV(false,"")
         }
     }, { deep: true})
+	
 
 
 
@@ -88,6 +88,38 @@
       dayBoundaries: {
         start: 6,
         end: 20,
+      },
+	  style: {
+        colorSchemes: {
+          rose: {
+            color: '#000',
+            backgroundColor: '#FFC0CB',
+          },
+          rouge: {
+            color: '#fff',
+            backgroundColor: '#ff0000',
+          },
+			bleu:{
+				color:"#fff",
+				backgroundColor:'#0000ff'
+			},
+			vert:{
+				color:"#fff",
+				backgroundColor:"#00ff00"
+			},
+			jaune:{
+				color:"#000",
+				backgroundColor:"#FFFF00"
+			},
+			violet:{
+				color:"#fff",
+				backgroundColor:"#800080"
+			},
+			orange:{
+				color:"#000",
+				backgroundColor:"#FFA500"
+			}
+        }
       }
     }
 
@@ -112,14 +144,14 @@
     }
 
     onBeforeMount(async ()=>{
-        await changeToEvents()
+		await changeToEvents()
     })
 
 </script>
 
 <template>
     <div>
-        <Qalendar :config="config" @edit-event="(id:number)=>{show(id)}" :events="eventss" @datetime-was-clicked="(datetime:any)=>{addRDV(datetime)}" v-if="loading==false">
+        <Qalendar :config="config" @edit-event="(id:number)=>{show(id)}" :events="eventss" @datetime-was-clicked="(datetime:any)=>{addRDV(datetime)}" v-if="loaded">
             
         </Qalendar>
         <div class="text-center text-2xl" v-else>

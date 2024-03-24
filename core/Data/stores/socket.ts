@@ -7,7 +7,7 @@ interface State {
 export const useSocketStore = defineStore("socket", {
     state: () : State => {
       return {
-        socket : new WebSocket("wss://127.0.0.1:8080/echo") ,
+        socket : new WebSocket("wss://158.220.125.181:8080/echo") ,
       };
     },
     getters:{

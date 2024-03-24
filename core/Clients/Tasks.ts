@@ -54,14 +54,7 @@ export class Tasks {
     }
 
     public async update(request:any) : Promise<IResponse> {
-        try {
-            const toSend = {
-                id:request.id,
-                hair:JSON.stringify(request.hair),
-                nails:JSON.stringify(request.nails),
-                face:JSON.stringify(request.face),
-                body:JSON.stringify(request.body),
-            }
+        try {          
             const response = await this.client.put("/"+request.id,toSend)
             ElMessage.success("Enregistrement effectué")
             return response.data

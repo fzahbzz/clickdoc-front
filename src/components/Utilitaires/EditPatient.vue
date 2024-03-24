@@ -23,7 +23,8 @@
         phone:"",
         CIN:"",
         coverage:false,
-        coverage_type:""
+        coverage_type:"",
+		coverage_number:""
     })
     const isUploaded=ref(false)
 
@@ -77,7 +78,7 @@
                 <el-col :span="18">
                     <el-form label-position="top" >
                         <el-row :gutter="10">
-                            <el-col :span="8">
+                            <el-col :span="6">
                                 <el-form-item label="Civilité (*)">
                                     <el-select @change="getAvatar()" v-model="patient.sex" class="w-full" >
                                         <el-option label="Monsieur" :value="'M'" />
@@ -85,14 +86,24 @@
                                     </el-select>
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="8">
+                            <el-col :span="6">
                                 <el-form-item label="Nom (*)" >
                                     <el-input v-model="patient.name" />
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="8">
+                            <el-col :span="6">
                                 <el-form-item label="Prénom(*)" >
                                     <el-input v-model="patient.surname" />
+                                </el-form-item>
+                            </el-col>
+							<el-col :span="6">
+                                <el-form-item label="Diabétique ?" >
+                                    <el-select class="w-full" v-model="patient.diabetes">
+                                        <el-option :value="0" label="Non" />
+                                        <el-option :value="3" label="Prédiabètes" />
+                                        <el-option :value="1" label="Type 1" />
+                                        <el-option :value="2" label="Type 2" />
+                                    </el-select>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="8">
@@ -134,14 +145,9 @@
                                     <el-input :disabled="!patient.coverage" v-model="patient.coverage_type" />
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="6">
-                                <el-form-item label="Diabétique ?" >
-                                    <el-select class="w-full" v-model="patient.diabetes">
-                                        <el-option :value="0" label="Non" />
-                                        <el-option :value="3" label="Prédiabètes" />
-                                        <el-option :value="1" label="Type 1" />
-                                        <el-option :value="2" label="Type 2" />
-                                    </el-select>
+							<el-col :span="6">
+                                <el-form-item label="Immatriculation" >
+                                    <el-input :disabled="!patient.coverage" v-model="patient.coverage_number" />
                                 </el-form-item>
                             </el-col>
                             <el-col :span="6">
@@ -151,9 +157,10 @@
                             </el-col>
                         </el-row>
                         <div class="text-right">
-                            <el-button type="primary" @click="add()" >
+							
+                            <button class="btn background-clickdoc" type="button" @click="add()" >
                                 Enregistrer
-                            </el-button>
+                            </button>
                         </div>
                     </el-form>
                 </el-col>

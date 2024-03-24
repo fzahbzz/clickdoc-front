@@ -139,6 +139,7 @@ onBeforeMount(async()=>{
                 <el-button class="btn btn-sm btn-block background-clickdoc" type="button" @click="async()=>await saveFacture()">
                     Enregistrer la facture 
                 </el-button>
+				<a class="btn btn-sm btn-block background-clickdoc" target="_blank" :href="'https://api-cd.clickdoc.ma/cnss/'+consult.consult "> Telecharger la fiche AMO CNSS  </a>
             </div>
         </div>
         <div class="text-center" v-else>

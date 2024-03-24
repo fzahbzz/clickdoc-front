@@ -7,6 +7,7 @@ import './style.css';
 import { createApp } from 'vue';
 
 import {Qalendar} from 'qalendar';
+import VueGapi from 'vue-gapi'
 
 
 
@@ -133,6 +134,13 @@ app.component("tasks",TasksVue)
 app.use(router)
 app.use(pinia)
 app.use(PrimeVue)
+app.use(VueGapi, {
+    apiKey: 'AIzaSyDNuH7imAm8PF2eoMWe6rwjM1dqE-HCsp4',
+    clientId: '902011582039-muto50mnapeho4a51ngdhmhmkd41646p.apps.googleusercontent.com',
+    discoveryDocs:['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
+    scope : 'https://www.googleapis.com/auth/calendar',
+    plugin_name:'clickdoc'
+  })
 
 app.use(ElementPlus)
 app.mount('#app')

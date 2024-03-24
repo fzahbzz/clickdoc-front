@@ -5,9 +5,10 @@ import { Patients } from '../../../core/Clients/Patients';
 import { RendezVous } from '../../../core/Clients/RendezVous';
 import { RdvService } from '../../../core/Data/services/rendez-vous'
 import { ActeMedical } from '../../../core/Clients/ActeMedical';
+import { useGapi } from 'vue-gapi'
+import moment from "moment"
 
 const util = useUtilStore();
-
 
 const client = new RendezVous()
 const patientClient = new Patients();
@@ -19,6 +20,53 @@ const patient:Ref<any> = ref({})
 const filter = ref("")
 const data = reactive([])
 const actesMedicaux : Ref<any> = ref({})
+const colors = [
+    {
+        name:"rose",
+        color: '#fff',
+        backgroundColor: '#FFC0CB',
+    },
+    {
+        name:"rouge",
+        color: '#fff',
+        backgroundColor: '#ff0000',
+    },
+    {
+        name:"bleu",
+        color:"#fff",
+        backgroundColor:'#0000ff'
+    },
+    {
+        name:"vert",
+        color:"#fff",
+        backgroundColor:"#00ff00"
+    },
+    {
+        name:"jaune",
+        color:"#fff",
+        backgroundColor:"#FFFF00"
+    },
+    {
+        name:"violet",
+        color:"#fff",
+        backgroundColor:"#800080"
+    },
+    {
+        name:"orange",
+        color:"#fff",
+        backgroundColor:"#FFA500"
+    }
+]
+
+const googleColors = {
+    rose:"4",
+    rouge:"11",
+    bleu:undefined,
+    vert:"2",
+    jaune:"5",
+    violet:"3",
+    orange:"6"
+}
 
 const rdv : Ref<any> = ref({
     doctor_id:1,
@@ -40,9 +88,39 @@ onMounted(async ()=>{
     actesMedicaux.value = await acteClient.getAll()
 })
 
+const gapi = useGapi()
+
+const login :any = async () => {
+    await gapi.login()
+}
+
+async function setData() {
+        const resource = {
+            "summary": "Rendez-vous avec "+patient.value.name + " " + patient.value.surname,
+            "location": "Cabinet",
+            "start": {
+                "dateTime": moment(rdv.value.date,'DD/MM/YYYY').format("YYYY-MM-DD")+"T"+rdv.value.heure+":00+01:00"
+            },
+            "end":{
+                "dateTime": moment(rdv.value.date,'DD/MM/YYYY').format("YYYY-MM-DD")+"T"+moment(rdv.value.heure,'HH:mm').add(30,'minutes').format('HH:mm')+":00+01:00"
+            },
+            "colorId":googleColors[rdv.value.color]
+            };
+        const request = gapi.clientProvider.client.gapi.client.calendar.events.insert(
+            {
+                'calendarId': 'primary',
+                'resource': resource
+            }
+        )
+        request.execute(function(resp) {
+        console.log(resp);
+	});
+}
+
 async function add_to_database() {
     rdv.value.patient_id = patient.value.id
     await service.add_rendez_vous(rdv.value);
+    await setData()
     patient.value={};
     rdv.value={
         doctor_id:1,
@@ -75,19 +153,28 @@ watch(util, async (newState) => {
     }
     if(newState.RDV == true){
         rdv.value.date=util.dateRDV.length>0?util.dateRDV:""
+		await login()
         actesMedicaux.value = await acteClient.getAll()
     }
 }, { deep: true})
+	
 </script>
 
 <template>
     <el-dialog width="950px" title="Nouveau Rendez-Vous" v-model="util.RDV">
         <el-form label-position="top" >
             <el-row :gutter="10">
-                <el-col :span="24">
+                <el-col :span="12">
                     <el-form-item label="Type de visite">
                         <el-select class="w-full" v-model="rdv.type"> 
                             <el-option v-for="acte in actesMedicaux" :value="acte.id" :label="acte.libelle" />
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="Couleur">
+                        <el-select class="w-full" v-model="rdv.color"> 
+                            <el-option v-for="color in colors" :style="'color:' +color.backgroundColor"  :value="color.name" :label="color.name" />
                         </el-select>
                     </el-form-item>
                 </el-col>

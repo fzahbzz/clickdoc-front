@@ -19,6 +19,13 @@
         await getTasks()
         task.value = {}
     }
+	
+	const updateTask = async (value) =>{
+		await taskClient.update(value)
+        await getTasks()
+        task.value = {}
+	}
+		
 
     onMounted(async ()=>{
         assistants.value = await client.getAll()
@@ -69,7 +76,7 @@
             <el-table-column prop="expiration_date" label="Date d'expiration" />
             <el-table-column >
                 <template #default="scope">
-                    <el-select class="w-full" v-model="scope.row.status">
+                    <el-select class="w-full" v-model="scope.row.status" @change(scope.row)>
                         <el-option v-for="status in statuts" :label="status" :value="status" />
                     </el-select>
                 </template>

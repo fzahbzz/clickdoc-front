@@ -80,10 +80,10 @@ onBeforeMount(async()=>{
         <el-table :data="ordonnance" :border="true">
             <el-table-column label="Médicament">
                 <template #default="scope">
-                    {{ scope.row.medicament }} ({{ scope.row.dose }} {{ scope.row.unit }} )
+                    {{ scope.row.medicament }} 
                 </template>
             </el-table-column>
-            <el-table-column label="Commentaire" prop="commentaire"  />
+            <el-table-column label="Posologie" prop="posologie"  />
             <el-table-column width="50px">
                 <template #default="scope">
                     <el-button class="btn btn-sm btn-danger background-clickdoc" type="button" @click="async ()=>{ await removeOrdonnance(scope.row.id) }"><el-icon><Delete/></el-icon></el-button>

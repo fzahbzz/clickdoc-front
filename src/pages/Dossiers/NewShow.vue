@@ -103,6 +103,12 @@ import { useAuthStore } from '../../../core/Data/stores/auth';
         poids:null,
         tension:null
     })
+	
+	let result = [
+        {'taille' : null},
+        {'poids' : null},
+        {'tension' : null}
+    ];
     
     const mesure_rens :Ref<any> = ref({
         taille:null,
@@ -144,6 +150,21 @@ import { useAuthStore } from '../../../core/Data/stores/auth';
         })
         patient.value = await getPatient()
         mesure.value = await getMesure()
+		const data = await getMesure()
+        mesure.value = data[0];
+		
+        result = data.reduce((acc, item) => {
+			['poids', 'taille', 'tension'].forEach(key => {
+				if (!acc[key]) {
+				acc[key] = [];
+				}
+				acc[key].push(item[key]);
+			});
+			return acc;
+        }, {});
+        Object.keys(result).forEach(key => {
+            result[key] = result[key].join(', ');
+        });
         consultation.value=await waitingClient.isWaiting({patient_id:patient.value.id})
         loading.close()
         ui.setFold(true)
@@ -226,7 +247,7 @@ import { useAuthStore } from '../../../core/Data/stores/auth';
                     </div>
                     <div class="rounded-2xl h-32 p-4 bg-white mt-3 shadow-xl" >
                         <div class="flex text-lg text-green-500">
-                            <img src="/icons/argent.png" class="h-6 w-6"> &nbsp;&nbsp;
+                            <img src="https://test.clickdoc.ma/argent.png" class="h-6 w-6"> &nbsp;&nbsp;
                             <span class="font-bold" >
                                 Observations
                             </span>
@@ -235,7 +256,7 @@ import { useAuthStore } from '../../../core/Data/stores/auth';
                     </div>
                     <div class="rounded-2xl p-4 bg-white mt-3 shadow-xl" >
                         <div class="flex text-lg text-clickdoc">
-                            <img src="/icons/mesure.png" class="h-6 w-6"> &nbsp;&nbsp;
+                            <img src="https://test.clickdoc.ma/mesure.png" class="h-6 w-6"> &nbsp;&nbsp;
                             <span class="font-bold">
                                 Données vitales
                             </span>
@@ -250,7 +271,7 @@ import { useAuthStore } from '../../../core/Data/stores/auth';
                                         </ul>    
                                     </li>
                                     <li> <b class="text-clickdoc"> Mesures : </b> <br>
-                                        <ul class="ml-4" v-if="mesure.id!=undefined">
+                                        <ul class="ml-4" v-if="typeof mesure == 'object'">
                                             <li> Taille :  <b>{{ mesure.taille }}</b></li>
                                             <li> Poids : <b>{{ mesure.poids }} </b></li>
                                             <li> Tension :  <b>{{ mesure.tension }}</b></li>
@@ -263,6 +284,7 @@ import { useAuthStore } from '../../../core/Data/stores/auth';
                                         <el-dialog title="Renseigner mesures" v-model="renseign">
                                             <el-form label-position="top">
                                                 <el-form-item label="taille">
+													{{ result.taille }}
                                                     <el-input v-model="mesure_rens.taille">
                                                         <template #append>
                                                             cm
@@ -270,6 +292,7 @@ import { useAuthStore } from '../../../core/Data/stores/auth';
                                                     </el-input>
                                                 </el-form-item>
                                                 <el-form-item label="poids" >
+													{{ result.poids }}
                                                     <el-input v-model="mesure_rens.poids">
                                                         <template #append>
                                                             KG
@@ -277,6 +300,7 @@ import { useAuthStore } from '../../../core/Data/stores/auth';
                                                     </el-input>
                                                 </el-form-item>
                                                 <el-form-item label="tension" >
+													{{ result.tension }}
                                                     <el-input v-model="mesure_rens.tension">
                                                         <template #append>
                                                             mmHG
@@ -293,7 +317,7 @@ import { useAuthStore } from '../../../core/Data/stores/auth';
                                 </ul>
                             </el-col>
                             <el-col :lg="9">
-                                <img src="/icons/silhouette.png" class="w-full">
+                                <img src="https://test.clickdoc.ma/silhouette.png" class="w-full">
                             </el-col>
                         </el-row>
                     </div>

@@ -164,7 +164,7 @@ watch(filter, async () => {
                                 <el-tab-pane
                                     label="Entrées"
                                 >
-                                    <button class="btn btn-sm btn-block background-clickdoc">
+                                    <button class="btn btn-sm btn-block background-clickdoc" @click.prevent="addPayment=true">
                                         Ajouter paiement
                                     </button>
                                     <ui-table   
